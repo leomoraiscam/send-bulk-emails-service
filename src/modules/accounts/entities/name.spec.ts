@@ -1,6 +1,6 @@
 import Name from './name';
 
-describe('Name Entity', () => {
+describe('Domain name entity', () => {
   it('should be able to create a name with valid name', () => {
     const name = Name.create('john') as Name;
 
