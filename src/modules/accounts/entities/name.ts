@@ -1,8 +1,12 @@
 class Name {
-  public readonly value: string;
+  private readonly name: string;
+
+  get value(): string {
+    return this.name;
+  }
 
   private constructor(name: string) {
-    this.value = name;
+    this.name = name;
   }
 
   static validate(name: string): boolean {
