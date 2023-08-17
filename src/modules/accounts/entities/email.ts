@@ -1,8 +1,12 @@
 class Email {
-  public readonly value: string;
+  private readonly email: string;
+
+  get value(): string {
+    return this.email;
+  }
 
   constructor(email: string) {
-    this.value = email;
+    this.email = email;
   }
 
   static validate(email: string): boolean {
