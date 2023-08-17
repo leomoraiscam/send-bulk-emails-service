@@ -1,8 +1,12 @@
 class Password {
-  public readonly value: string;
+  private readonly password: string;
+
+  get value(): string {
+    return this.password;
+  }
 
   constructor(password: string) {
-    this.value = password;
+    this.password = password;
   }
 
   static validate(password: string) {
