@@ -1,3 +1,11 @@
+// eslint-disable-next-line max-classes-per-file
+export class InvalidEmailError extends Error {
+  constructor(email: string) {
+    super(`The email "${email}" is invalid.`);
+    this.name = 'InvalidEmailError';
+  }
+}
+
 class Email {
   private readonly email: string;
 
@@ -52,11 +60,11 @@ class Email {
     return true;
   }
 
-  static create(email: string): Email {
+  static create(email: string): Email | Error {
     const isValid = this.validate(email);
 
     if (!isValid) {
-      throw new Error();
+      return new InvalidEmailError(email);
     }
 
     return new Email(email);

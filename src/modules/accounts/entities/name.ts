@@ -1,3 +1,11 @@
+// eslint-disable-next-line max-classes-per-file
+export class InvalidNameError extends Error {
+  constructor(name: string) {
+    super(`The name "${name}" is invalid.`);
+    this.name = 'InvalidNameError';
+  }
+}
+
 class Name {
   private readonly name: string;
 
@@ -25,7 +33,7 @@ class Name {
     const isValid = this.validate(name);
 
     if (!isValid) {
-      throw new Error();
+      return new InvalidNameError(name);
     }
 
     return new Name(name);
