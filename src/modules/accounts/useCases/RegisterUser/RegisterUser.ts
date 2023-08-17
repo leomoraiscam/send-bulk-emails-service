@@ -1,25 +1,31 @@
 // eslint-disable-next-line max-classes-per-file
-import Email from '@modules/accounts/entities/email';
-import Name from '@modules/accounts/entities/name';
-import Password from '@modules/accounts/entities/password';
+import Email, { InvalidEmailError } from '@modules/accounts/entities/email';
+import Name, { InvalidNameError } from '@modules/accounts/entities/name';
+import Password, {
+  InvalidPasswordLengthError,
+} from '@modules/accounts/entities/password';
 import User from '@modules/accounts/entities/user';
 
-interface IRegisterUserRequest {
+import { IUsersRepository } from '../../repositories/IUsersRepository';
+
+export interface IRegisterUserRequest {
   name: string;
   email: string;
   password: string;
 }
 
-export type RegisterUserResponse = Partial<IRegisterUserRequest>;
-
-export class InvalidPasswordLengthError extends Error {
-  constructor() {
-    super(`The password must have between 6 and 255 characters.`);
-    this.name = 'InvalidPasswordLengthError';
+export class AccountAlreadyExistsError extends Error {
+  constructor(email: string) {
+    super(`The email "${email}" is already registered.`);
+    this.name = 'AccountAlreadyExistsError';
   }
 }
 
+export type RegisterUserResponse = Partial<IRegisterUserRequest>;
+
 class RegisterUser {
+  constructor(private usersRepository: IUsersRepository) {}
+
   async execute(
     request: IRegisterUserRequest
   ): Promise<RegisterUserResponse | string> {
@@ -28,13 +34,17 @@ class RegisterUser {
     const nameOrError = Name.create(name);
 
     if (nameOrError instanceof Error) {
-      throw new Error(`Name to user is invalid`);
+      const { name: errorName } = new InvalidNameError(name);
+
+      return errorName;
     }
 
     const emailOrError = Email.create(email);
 
     if (emailOrError instanceof Error) {
-      throw new Error(`E-mail to user is invalid`);
+      const { name } = new InvalidEmailError(email);
+
+      return name;
     }
 
     const passwordOrError = Password.create(password) as Password;
@@ -53,6 +63,14 @@ class RegisterUser {
 
     if (userOrError instanceof Error) {
       throw new Error(`User data is incorrect`);
+    }
+
+    const userAlreadyExists = await this.usersRepository.exists(
+      userOrError.email.value
+    );
+
+    if (userAlreadyExists) {
+      return new AccountAlreadyExistsError(userOrError.email.value).name;
     }
 
     return {
