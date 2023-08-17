@@ -1,3 +1,11 @@
+// eslint-disable-next-line max-classes-per-file
+export class InvalidPasswordLengthError extends Error {
+  constructor() {
+    super(`The password must have between 6 and 255 characters.`);
+    this.name = 'InvalidPasswordLengthError';
+  }
+}
+
 class Password {
   private readonly password: string;
 
@@ -25,7 +33,7 @@ class Password {
     const isValid = this.validate(password);
 
     if (!isValid) {
-      throw new Error();
+      return new InvalidPasswordLengthError();
     }
 
     return new Password(password);
