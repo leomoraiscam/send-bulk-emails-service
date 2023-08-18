@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import Email from '@modules/accounts/entities/email';
 import InvalidEmailError from '@modules/accounts/entities/errors/InvalidEmailError';
 import InvalidNameError from '@modules/accounts/entities/errors/InvalidNameError';
@@ -8,18 +7,12 @@ import Password from '@modules/accounts/entities/password';
 import User from '@modules/accounts/entities/user';
 
 import { IUsersRepository } from '../../repositories/IUsersRepository';
+import AccountAlreadyExistsError from './errors/AccountAlreadyExistsError';
 
 export interface IRegisterUserRequest {
   name: string;
   email: string;
   password: string;
-}
-
-export class AccountAlreadyExistsError extends Error {
-  constructor(email: string) {
-    super(`The email "${email}" is already registered.`);
-    this.name = 'AccountAlreadyExistsError';
-  }
 }
 
 export type RegisterUserResponse = Partial<IRegisterUserRequest>;
