@@ -9,14 +9,20 @@ class InMemoryUsersRepository implements IUsersRepository {
     this.repository = repository;
   }
 
-  async exists(email: string): Promise<boolean> {
+  async findByEmail(email: string): Promise<User | null> {
     const user = this.repository.find((user) => user.email.value === email);
 
     if (!user) {
-      return false;
+      return null;
     }
 
-    return true;
+    return user;
+  }
+
+  async create({ name, email, password }: User): Promise<void> {
+    const user = new User(name, email, password);
+
+    this.repository.push(user);
   }
 }
 

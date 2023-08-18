@@ -59,7 +59,7 @@ class RegisterUser {
       throw new Error(`User data is incorrect`);
     }
 
-    const userAlreadyExists = await this.usersRepository.exists(
+    const userAlreadyExists = await this.usersRepository.findByEmail(
       userOrError.email.value
     );
 
@@ -67,9 +67,7 @@ class RegisterUser {
       return new AccountAlreadyExistsError(userOrError.email.value).name;
     }
 
-    // TODO: criar o metodo save
-
-    // TODO:  fim do metodo save
+    await this.usersRepository.create(userOrError);
 
     return {
       name: userOrError.name.value,
