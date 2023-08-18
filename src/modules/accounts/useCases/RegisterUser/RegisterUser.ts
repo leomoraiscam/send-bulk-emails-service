@@ -31,7 +31,7 @@ class RegisterUser {
   ): Promise<RegisterUserResponse | string> {
     const { name, email, password } = request;
 
-    const nameOrError = Name.create(name);
+    const nameOrError = Name.create(name) as Name;
 
     if (nameOrError instanceof Error) {
       const { name: errorName } = new InvalidNameError(name);
@@ -39,7 +39,7 @@ class RegisterUser {
       return errorName;
     }
 
-    const emailOrError = Email.create(email);
+    const emailOrError = Email.create(email) as Email;
 
     if (emailOrError instanceof Error) {
       const { name } = new InvalidEmailError(email);
@@ -49,7 +49,7 @@ class RegisterUser {
 
     const passwordOrError = Password.create(password) as Password;
 
-    if (passwordOrError instanceof Error) {
+    if (typeof passwordOrError === 'string') {
       const { name } = new InvalidPasswordLengthError();
 
       return name;
@@ -72,6 +72,10 @@ class RegisterUser {
     if (userAlreadyExists) {
       return new AccountAlreadyExistsError(userOrError.email.value).name;
     }
+
+    // TODO: criar o metodo save
+
+    // TODO:  fim do metodo save
 
     return {
       name: userOrError.name.value,

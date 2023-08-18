@@ -8,14 +8,14 @@ describe('Domain name entity', () => {
   });
 
   it('should not be able to create a name with invalid name (when the same a not send)', () => {
-    expect(() => Name.create('')).toThrow();
+    expect(Name.create('')).toBe('InvalidNameError');
   });
 
   it('should not be able to create a name with invalid name (when the same less 3 chars)', () => {
-    expect(() => Name.create('l')).toThrow();
+    expect(Name.create('l')).toBe('InvalidNameError');
   });
 
   it('should not be able to create a name with invalid name (when the same than 255 chars)', () => {
-    expect(() => Name.create('l'.repeat(256))).toThrow();
+    expect(Name.create('l'.repeat(256))).toBe('InvalidNameError');
   });
 });
