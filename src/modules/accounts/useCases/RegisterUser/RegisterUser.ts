@@ -1,9 +1,10 @@
 // eslint-disable-next-line max-classes-per-file
-import Email, { InvalidEmailError } from '@modules/accounts/entities/email';
-import Name, { InvalidNameError } from '@modules/accounts/entities/name';
-import Password, {
-  InvalidPasswordLengthError,
-} from '@modules/accounts/entities/password';
+import Email from '@modules/accounts/entities/email';
+import InvalidEmailError from '@modules/accounts/entities/errors/InvalidEmailError';
+import InvalidNameError from '@modules/accounts/entities/errors/InvalidNameError';
+import InvalidPasswordLengthError from '@modules/accounts/entities/errors/InvalidPasswordLengthError';
+import Name from '@modules/accounts/entities/name';
+import Password from '@modules/accounts/entities/password';
 import User from '@modules/accounts/entities/user';
 
 import { IUsersRepository } from '../../repositories/IUsersRepository';
