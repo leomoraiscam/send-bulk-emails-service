@@ -1,34 +1,18 @@
-import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
+import Email from '@modules/accounts/entities/email';
+import Name from '@modules/accounts/entities/name';
+import Password from '@modules/accounts/entities/password';
+import User from '@modules/accounts/entities/user';
 
-import RegisterUser, {
-  IRegisterUserRequest,
-  RegisterUserResponse,
-} from './RegisterUser';
-
-class UsersRepository implements IUsersRepository {
-  private repository: IRegisterUserRequest[] = [];
-
-  constructor(repository: IRegisterUserRequest[]) {
-    this.repository = repository;
-  }
-
-  async exists(email: string): Promise<boolean> {
-    const user = this.repository.find((user) => user.email === email);
-
-    if (!user) {
-      return false;
-    }
-
-    return true;
-  }
-}
+import InMemoryUsersRepository from '../../repositories/in-memory/InMemoryUsersRepository';
+import RegisterUser, { RegisterUserResponse } from './RegisterUser';
 
 describe('Register User Use Case', () => {
-  let usersRepository: IUsersRepository;
+  let inMemoryUsersRepository: InMemoryUsersRepository;
 
   it('should be able to register new user', async () => {
-    usersRepository = new UsersRepository([]);
-    const registerUser = new RegisterUser(usersRepository);
+    inMemoryUsersRepository = new InMemoryUsersRepository([]);
+
+    const registerUser = new RegisterUser(inMemoryUsersRepository);
 
     const userData = {
       name: 'John Doe',
@@ -44,8 +28,9 @@ describe('Register User Use Case', () => {
   });
 
   it('should not be able to register new user with invalid data', async () => {
-    usersRepository = new UsersRepository([]);
-    const registerUser = new RegisterUser(usersRepository);
+    inMemoryUsersRepository = new InMemoryUsersRepository([]);
+
+    const registerUser = new RegisterUser(inMemoryUsersRepository);
 
     const userData = {
       name: 'John Doe',
@@ -61,21 +46,20 @@ describe('Register User Use Case', () => {
   });
 
   it('should not be able to register new user with existing email', async () => {
-    const user = [
-      {
-        name: 'John Doe',
-        email: 'john@email.com',
-        password: '123456',
-      },
-    ];
+    const user = User.create({
+      name: Name.create('John Doe') as Name,
+      email: Email.create('john@doe.com') as Email,
+      password: Password.create('123456') as Password,
+    }) as User;
 
-    usersRepository = new UsersRepository(user);
-    const registerUser = new RegisterUser(usersRepository);
+    inMemoryUsersRepository = new InMemoryUsersRepository([user]);
+
+    const registerUser = new RegisterUser(inMemoryUsersRepository);
 
     const { name, email, password } = {
-      name: user[0].name,
-      email: user[0].email,
-      password: user[0].password,
+      name: user.name.value,
+      email: user.email.value,
+      password: user.password.value,
     };
 
     expect(
