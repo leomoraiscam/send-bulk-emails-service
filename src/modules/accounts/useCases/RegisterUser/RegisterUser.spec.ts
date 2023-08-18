@@ -4,7 +4,7 @@ import Password from '@modules/accounts/entities/password';
 import User from '@modules/accounts/entities/user';
 
 import InMemoryUsersRepository from '../../repositories/in-memory/InMemoryUsersRepository';
-import RegisterUser, { RegisterUserResponse } from './RegisterUser';
+import RegisterUser from './RegisterUser';
 
 describe('Register User Use Case', () => {
   let inMemoryUsersRepository: InMemoryUsersRepository;
@@ -20,11 +20,13 @@ describe('Register User Use Case', () => {
       password: 'test@1234',
     };
 
-    const user = (await registerUser.execute({
+    await registerUser.execute({
       ...userData,
-    })) as RegisterUserResponse;
+    });
 
-    expect(user.name).toBe('John Doe');
+    const user = await inMemoryUsersRepository.findByEmail(userData.email);
+
+    expect(user.name.value).toBe('John Doe');
   });
 
   it('should not be able to register new user with invalid data', async () => {
