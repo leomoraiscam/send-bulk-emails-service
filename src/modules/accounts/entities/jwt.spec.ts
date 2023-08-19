@@ -4,7 +4,7 @@ import Name from './name';
 import Password from './password';
 import User from './user';
 
-describe('Domain JWT entity', () => {
+describe('User JWT object value', () => {
   it('should be able to create new user', () => {
     const user = User.create({
       name: Name.create('John Doe') as Name,

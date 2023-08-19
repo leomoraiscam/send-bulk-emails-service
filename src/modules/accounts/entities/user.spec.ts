@@ -3,7 +3,7 @@ import Name from './name';
 import Password from './password';
 import User from './user';
 
-describe('User Entity', () => {
+describe('User Domain Entity', () => {
   it('should be able to create a user', () => {
     const userOrError = User.create({
       name: Name.create('John Doe') as Name,

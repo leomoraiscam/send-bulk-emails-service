@@ -1,6 +1,6 @@
 import Password from './password';
 
-describe('Domain password entity', () => {
+describe('User password object value', () => {
   it('should accept valid password', () => {
     const passwordOrError = Password.create('123456') as Password;
 
@@ -8,16 +8,14 @@ describe('Domain password entity', () => {
   });
 
   it('should not be able to create a password when the same contains null strings', () => {
-    expect(Password.create(null) as Password).toBe(
-      'InvalidPasswordLengthError'
-    );
+    expect(Password.create(null) as Password).toBeInstanceOf(Error);
   });
 
   it('should reject password with less than 6 characters', () => {
-    expect(Password.create('12345')).toBe('InvalidPasswordLengthError');
+    expect(Password.create('12345')).toBeInstanceOf(Error);
   });
 
   it('should reject password with more than 255 characters', () => {
-    expect(Password.create('1'.repeat(260))).toBe('InvalidPasswordLengthError');
+    expect(Password.create('1'.repeat(260))).toBeInstanceOf(Error);
   });
 });
