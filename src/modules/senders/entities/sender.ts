@@ -47,10 +47,7 @@ class Sender {
     this._isDefault = _isDefault ?? false;
   }
 
-  static create(
-    { name, email, isDefault }: ISenderProps,
-    id?: string
-  ): Sender | Error {
+  static create({ name, email, isDefault }: ISenderProps, id?: string): Sender {
     return new Sender(name, email, isDefault, id);
   }
 }
