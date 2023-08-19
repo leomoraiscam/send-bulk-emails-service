@@ -23,13 +23,11 @@ class Name {
     return true;
   }
 
-  static create(name: string): Name | string {
+  static create(name: string): Name | Error {
     const isValid = this.validate(name);
 
     if (!isValid) {
-      const { name: NameError } = new InvalidNameError(name);
-
-      return NameError;
+      return new InvalidNameError(name);
     }
 
     return new Name(name);

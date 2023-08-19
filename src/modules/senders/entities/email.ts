@@ -54,13 +54,11 @@ class Email {
     return true;
   }
 
-  static create(email: string): Email | string {
+  static create(email: string): Email | Error {
     const isValid = this.validate(email);
 
     if (!isValid) {
-      const { name } = new InvalidEmailError(email);
-
-      return name;
+      return new InvalidEmailError(email);
     }
 
     return new Email(email);
