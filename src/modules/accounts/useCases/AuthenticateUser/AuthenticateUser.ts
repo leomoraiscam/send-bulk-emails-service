@@ -15,16 +15,14 @@ class AuthenticateUser {
 
   async execute(
     request: IAuthenticateUserRequest
-  ): Promise<{ token: string } | string> {
+  ): Promise<{ token: string } | Error> {
     let isPasswordValid = false;
     const { email, password } = request;
 
     const user = await this.usersRepository.findByEmail(email);
 
     if (!user) {
-      const { name } = new InvalidEmailOrPasswordError();
-
-      return name;
+      return new InvalidEmailOrPasswordError();
     }
 
     if (user.password.isHashedValue) {
@@ -33,10 +31,8 @@ class AuthenticateUser {
       isPasswordValid = password === user.password.value;
     }
 
-    if (isPasswordValid === false) {
-      const { name } = new InvalidEmailOrPasswordError();
-
-      return name;
+    if (!isPasswordValid) {
+      return new InvalidEmailOrPasswordError();
     }
 
     const { value: token } = JWT.signUser(user);
