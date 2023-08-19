@@ -29,13 +29,11 @@ class Password {
     return true;
   }
 
-  static create(password: string, hashed = false): Password | string {
+  static create(password: string, hashed = false): Password | Error {
     const isValid = this.validate(password);
 
     if (!isValid) {
-      const { name } = new InvalidPasswordLengthError();
-
-      return name;
+      return new InvalidPasswordLengthError();
     }
 
     return new Password(password, hashed);
