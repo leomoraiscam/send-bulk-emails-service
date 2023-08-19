@@ -6,21 +6,23 @@ import User from '@modules/accounts/entities/user';
 import InMemoryUsersRepository from '../../repositories/in-memory/InMemoryUsersRepository';
 import AuthenticateUser from './AuthenticateUser';
 
-let usersRepository: InMemoryUsersRepository;
+let inMemoryUsersRepository: InMemoryUsersRepository;
 let authenticateUser: AuthenticateUser;
 
-describe('Authenticate User', () => {
-  it('should be able to authenticate', async () => {
-    usersRepository = new InMemoryUsersRepository([]);
-    authenticateUser = new AuthenticateUser(usersRepository);
+describe('Authenticate User Use Case', () => {
+  beforeEach(() => {
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    authenticateUser = new AuthenticateUser(inMemoryUsersRepository);
+  });
 
+  it('should be able to authenticate', async () => {
     const user = User.create({
       name: Name.create('John Doe') as Name,
       email: Email.create('john@doe.com') as Email,
       password: Password.create('123456') as Password,
     }) as User;
 
-    usersRepository.create(user);
+    inMemoryUsersRepository.create(user);
 
     const response = await authenticateUser.execute({
       email: 'john@doe.com',
@@ -33,34 +35,28 @@ describe('Authenticate User', () => {
   });
 
   it('should not be able to authenticate when user e-mail does not exist in database', async () => {
-    usersRepository = new InMemoryUsersRepository([]);
-    authenticateUser = new AuthenticateUser(usersRepository);
-
     const response = await authenticateUser.execute({
       email: 'invalid@example.com',
       password: '123456',
     });
 
-    expect(response).toEqual('InvalidEmailOrPasswordError');
+    expect(response).toBeInstanceOf(Error);
   });
 
-  it('should not be able to authenticate with invalid password', async () => {
-    usersRepository = new InMemoryUsersRepository([]);
-    authenticateUser = new AuthenticateUser(usersRepository);
-
+  it('should not be able to authenticate with wrong user password', async () => {
     const user = User.create({
       name: Name.create('John Doe') as Name,
       email: Email.create('john@doe.com') as Email,
       password: Password.create('123456') as Password,
     }) as User;
 
-    await usersRepository.create(user);
+    await inMemoryUsersRepository.create(user);
 
     const response = await authenticateUser.execute({
       email: 'john@doe.com',
       password: 'invalid-password',
     });
 
-    expect(response).toEqual('InvalidEmailOrPasswordError');
+    expect(response).toBeInstanceOf(Error);
   });
 });
