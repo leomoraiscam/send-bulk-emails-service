@@ -5,10 +5,6 @@ import { IUsersRepository } from '../IUsersRepository';
 class InMemoryUsersRepository implements IUsersRepository {
   private repository: User[] = [];
 
-  constructor(repository: User[]) {
-    this.repository = repository;
-  }
-
   async findByEmail(email: string): Promise<User | null> {
     const user = this.repository.find((user) => user.email.value === email);
 
