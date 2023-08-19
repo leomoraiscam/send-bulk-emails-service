@@ -2,7 +2,7 @@ import Email from './email';
 import Name from './name';
 import Sender from './sender';
 
-describe('Domain JWT entity', () => {
+describe('Sender Domain Entity', () => {
   it('should be able to create new sender', () => {
     const name = Name.create('John Doe') as Name;
     const email = Email.create('johndoe@example') as Email;
