@@ -22,31 +22,25 @@ class RegisterUser {
 
   async execute(
     request: IRegisterUserRequest
-  ): Promise<RegisterUserResponse | string> {
+  ): Promise<RegisterUserResponse | Error> {
     const { name, email, password } = request;
 
     const nameOrError = Name.create(name) as Name;
 
     if (nameOrError instanceof Error) {
-      const { name: errorName } = new InvalidNameError(name);
-
-      return errorName;
+      return new InvalidNameError(name);
     }
 
     const emailOrError = Email.create(email) as Email;
 
     if (emailOrError instanceof Error) {
-      const { name } = new InvalidEmailError(email);
-
-      return name;
+      return new InvalidEmailError(email);
     }
 
     const passwordOrError = Password.create(password) as Password;
 
-    if (typeof passwordOrError === 'string') {
-      const { name } = new InvalidPasswordLengthError();
-
-      return name;
+    if (passwordOrError instanceof Error) {
+      return new InvalidPasswordLengthError();
     }
 
     const userOrError = User.create({
@@ -64,7 +58,7 @@ class RegisterUser {
     );
 
     if (userAlreadyExists) {
-      return new AccountAlreadyExistsError(userOrError.email.value).name;
+      return new AccountAlreadyExistsError(userOrError.email.value);
     }
 
     await this.usersRepository.create(userOrError);
