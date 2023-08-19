@@ -6,45 +6,35 @@ import User from '@modules/accounts/entities/user';
 import InMemoryUsersRepository from '../../repositories/in-memory/InMemoryUsersRepository';
 import RegisterUser from './RegisterUser';
 
+let inMemoryUsersRepository: InMemoryUsersRepository;
+let registerUser: RegisterUser;
+
 describe('Register User Use Case', () => {
-  let inMemoryUsersRepository: InMemoryUsersRepository;
+  beforeEach(() => {
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    registerUser = new RegisterUser(inMemoryUsersRepository);
+  });
 
   it('should be able to register new user', async () => {
-    inMemoryUsersRepository = new InMemoryUsersRepository([]);
-
-    const registerUser = new RegisterUser(inMemoryUsersRepository);
-
-    const userData = {
+    await registerUser.execute({
       name: 'John Doe',
       email: 'john@email.com',
       password: 'test@1234',
-    };
-
-    await registerUser.execute({
-      ...userData,
     });
 
-    const user = await inMemoryUsersRepository.findByEmail(userData.email);
+    const user = await inMemoryUsersRepository.findByEmail('john@email.com');
 
     expect(user.name.value).toBe('John Doe');
   });
 
   it('should not be able to register new user with invalid data', async () => {
-    inMemoryUsersRepository = new InMemoryUsersRepository([]);
-
-    const registerUser = new RegisterUser(inMemoryUsersRepository);
-
-    const userData = {
-      name: 'John Doe',
-      email: 'john@email.com',
-      password: 't1',
-    };
-
-    const response = await registerUser.execute({
-      ...userData,
-    });
-
-    expect(response).toEqual('InvalidPasswordLengthError');
+    expect(
+      await registerUser.execute({
+        name: 'John Doe',
+        email: 'john@email.com',
+        password: 't1',
+      })
+    ).toBeInstanceOf(Error);
   });
 
   it('should not be able to register new user with existing email', async () => {
@@ -54,22 +44,14 @@ describe('Register User Use Case', () => {
       password: Password.create('123456') as Password,
     }) as User;
 
-    inMemoryUsersRepository = new InMemoryUsersRepository([user]);
-
-    const registerUser = new RegisterUser(inMemoryUsersRepository);
-
-    const { name, email, password } = {
-      name: user.name.value,
-      email: user.email.value,
-      password: user.password.value,
-    };
+    await inMemoryUsersRepository.create(user);
 
     expect(
       await registerUser.execute({
-        name,
-        email,
-        password,
+        name: user.name.value,
+        email: user.email.value,
+        password: user.password.value,
       })
-    ).toBe('AccountAlreadyExistsError');
+    ).toBeInstanceOf(Error);
   });
 });
