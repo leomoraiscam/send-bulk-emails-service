@@ -2,13 +2,19 @@ import InvalidPasswordLengthError from './errors/InvalidPasswordLengthError';
 
 class Password {
   private readonly password: string;
+  private readonly hashed?: boolean;
 
   get value(): string {
     return this.password;
   }
 
-  constructor(password: string) {
+  get isHashedValue(): boolean {
+    return this.hashed;
+  }
+
+  constructor(password: string, hashed: boolean) {
     this.password = password;
+    this.hashed = hashed;
   }
 
   static validate(password: string) {
@@ -23,7 +29,7 @@ class Password {
     return true;
   }
 
-  static create(password: string): Password | string {
+  static create(password: string, hashed = false): Password | string {
     const isValid = this.validate(password);
 
     if (!isValid) {
@@ -32,7 +38,7 @@ class Password {
       return name;
     }
 
-    return new Password(password);
+    return new Password(password, hashed);
   }
 }
 
