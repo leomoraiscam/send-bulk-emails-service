@@ -1,6 +1,9 @@
 import Sender from '@modules/senders/entities/sender';
 
-import ISendersRepository from '../ISendersRepository';
+import ISendersRepository, {
+  SendersSearchParams,
+  SendersSearchResult,
+} from '../ISendersRepository';
 
 class InMemorySendersRepository implements ISendersRepository {
   constructor(public items: Sender[] = []) {}
@@ -15,6 +18,28 @@ class InMemorySendersRepository implements ISendersRepository {
 
   async findDefaultSender(): Promise<Sender> {
     return this.items.find((sender) => sender.isDefault === true);
+  }
+
+  async search({
+    query,
+    page,
+    perPage,
+  }: SendersSearchParams): Promise<SendersSearchResult> {
+    let senderList = this.items;
+
+    if (query) {
+      senderList = this.items.filter((sender) => {
+        const search = new RegExp(query, 'i');
+        return (
+          search.test(sender.name.value) || search.test(sender.email.value)
+        );
+      });
+    }
+
+    return {
+      data: senderList.slice((page - 1) * perPage, page * perPage),
+      totalCount: senderList.length,
+    };
   }
 
   async create(sender: Sender): Promise<void> {
