@@ -7,9 +7,7 @@ class GetAllSenders {
   constructor(private sendersRepository: ISendersRepository) {}
 
   async execute(): Promise<GetAllSendersResponse> {
-    const senders = await this.sendersRepository.findAll();
-
-    return senders;
+    return this.sendersRepository.findAll();
   }
 }
 
