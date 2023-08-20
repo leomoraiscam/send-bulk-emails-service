@@ -13,23 +13,19 @@ type CreateSenderRequest = {
 class CreateSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
-  async execute({
-    name,
-    email,
-  }: CreateSenderRequest): Promise<Sender | string> {
+  async execute(request: CreateSenderRequest): Promise<Sender | Error> {
+    const { name, email } = request;
+
     const nameOrError = Name.create(name) as Name;
-    const emailOrError = Email.create(email) as Email;
 
-    if (typeof nameOrError === 'string') {
-      const { name: NameError } = new InvalidNameError(name);
-
-      return NameError;
+    if (nameOrError instanceof Error) {
+      return new InvalidNameError(name);
     }
 
-    if (typeof emailOrError === 'string') {
-      const { name } = new InvalidEmailError(email);
+    const emailOrError = Email.create(email) as Email;
 
-      return name;
+    if (emailOrError instanceof Error) {
+      return new InvalidEmailError(email);
     }
 
     const senderOrError = Sender.create({
