@@ -9,9 +9,11 @@ type SetDefaultSenderRequest = {
 class SetDefaultSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
-  async execute({
-    senderId,
-  }: SetDefaultSenderRequest): Promise<InvalidSenderError | null> {
+  async execute(
+    request: SetDefaultSenderRequest
+  ): Promise<InvalidSenderError | null> {
+    const { senderId } = request;
+
     const sender = await this.sendersRepository.findById(senderId);
 
     if (!sender) {
