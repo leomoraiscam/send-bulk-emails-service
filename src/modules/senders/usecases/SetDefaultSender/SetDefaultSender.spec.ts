@@ -5,13 +5,13 @@ import InMemorySendersRepository from '@modules/senders/repositories/in-memory/I
 
 import SetDefaultSender from './SetDefaultSender';
 
-let sendersRepository: InMemorySendersRepository;
+let inMemorySendersRepository: InMemorySendersRepository;
 let setDefaultSender: SetDefaultSender;
 
-describe('Set Default Sender', () => {
+describe('Set Default Sender Use Case', () => {
   beforeEach(() => {
-    sendersRepository = new InMemorySendersRepository();
-    setDefaultSender = new SetDefaultSender(sendersRepository);
+    inMemorySendersRepository = new InMemorySendersRepository();
+    setDefaultSender = new SetDefaultSender(inMemorySendersRepository);
   });
 
   it('should be able to set default sender', async () => {
@@ -27,22 +27,25 @@ describe('Set Default Sender', () => {
       isDefault: false,
     }) as Sender;
 
-    await sendersRepository.create(defaultSender);
-    await sendersRepository.create(notDefaultSender);
+    await Promise.all([
+      inMemorySendersRepository.create(defaultSender),
+      inMemorySendersRepository.create(notDefaultSender),
+    ]);
 
     await setDefaultSender.execute({
       senderId: notDefaultSender.id,
     });
 
-    const updatedDefaultSender = await sendersRepository.findById(
+    const updatedDefaultSender = await inMemorySendersRepository.findById(
       defaultSender.id
     );
 
-    const updatedNotDefaultSender = await sendersRepository.findById(
+    const updatedNotDefaultSender = await inMemorySendersRepository.findById(
       notDefaultSender.id
     );
 
-    const currentDefaultSender = await sendersRepository.findDefaultSender();
+    const currentDefaultSender =
+      await inMemorySendersRepository.findDefaultSender();
 
     expect(updatedDefaultSender.isDefault).toBe(false);
     expect(updatedNotDefaultSender.isDefault).toBe(true);
