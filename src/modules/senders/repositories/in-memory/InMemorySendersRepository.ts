@@ -6,18 +6,18 @@ import ISendersRepository, {
 } from '../ISendersRepository';
 
 class InMemorySendersRepository implements ISendersRepository {
-  constructor(public items: Sender[] = []) {}
+  private repository: Sender[] = [];
 
   async findAll(): Promise<Sender[]> {
-    return this.items;
+    return this.repository;
   }
 
   async findById(id: string): Promise<Sender> {
-    return this.items.find((sender) => sender.id === id);
+    return this.repository.find((sender) => sender.id === id);
   }
 
   async findDefaultSender(): Promise<Sender> {
-    return this.items.find((sender) => sender.isDefault === true);
+    return this.repository.find((sender) => sender.isDefault === true);
   }
 
   async search({
@@ -25,10 +25,10 @@ class InMemorySendersRepository implements ISendersRepository {
     page,
     perPage,
   }: SendersSearchParams): Promise<SendersSearchResult> {
-    let senderList = this.items;
+    let senderList = this.repository;
 
     if (query) {
-      senderList = this.items.filter((sender) => {
+      senderList = this.repository.filter((sender) => {
         const search = new RegExp(query, 'i');
         return (
           search.test(sender.name.value) || search.test(sender.email.value)
@@ -43,15 +43,15 @@ class InMemorySendersRepository implements ISendersRepository {
   }
 
   async create(sender: Sender): Promise<void> {
-    this.items.push(sender);
+    this.repository.push(sender);
   }
 
   async save(sender: Sender): Promise<void> {
-    const senderIndex = this.items.findIndex(
+    const senderIndex = this.repository.findIndex(
       (findSender) => findSender.id === sender.id
     );
 
-    this.items[senderIndex] = sender;
+    this.repository[senderIndex] = sender;
   }
 }
 
