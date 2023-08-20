@@ -29,5 +29,3 @@ export class SearchSenders {
     return { data, totalCount };
   }
 }
-
-export default SearchSenders;
