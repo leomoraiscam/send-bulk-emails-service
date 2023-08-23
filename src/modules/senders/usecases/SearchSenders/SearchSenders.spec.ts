@@ -8,7 +8,7 @@ import { SearchSenders } from './SearchSenders';
 let inMemorySendersRepository: InMemorySendersRepository;
 let searchSenders: SearchSenders;
 
-describe('Search Senders', () => {
+describe('Search Senders Use Case', () => {
   beforeEach(async () => {
     inMemorySendersRepository = new InMemorySendersRepository();
     searchSenders = new SearchSenders(inMemorySendersRepository);
@@ -39,6 +39,7 @@ describe('Search Senders', () => {
     expect(totalCount).toEqual(1);
     expect(data[0].name.value).toEqual('John Doe5');
   });
+
   it('should be able to search through senders with case-insensitive', async () => {
     const { data, totalCount } = await searchSenders.execute({ query: 'DOE5' });
 
