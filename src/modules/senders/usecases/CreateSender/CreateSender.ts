@@ -5,15 +5,12 @@ import Name from '@modules/senders/entities/name';
 import Sender from '@modules/senders/entities/sender';
 import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
 
-type CreateSenderRequest = {
-  name: string;
-  email: string;
-};
+import { ICreateSenderRequest } from './dtos/ICreateSenderPayload';
 
 class CreateSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
-  async execute(request: CreateSenderRequest): Promise<Sender | Error> {
+  async execute(request: ICreateSenderRequest): Promise<Sender | Error> {
     const { name, email } = request;
 
     const nameOrError = Name.create(name) as Name;

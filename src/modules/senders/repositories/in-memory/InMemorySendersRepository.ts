@@ -1,9 +1,8 @@
 import Sender from '@modules/senders/entities/sender';
 
-import ISendersRepository, {
-  SendersSearchParams,
-  SendersSearchResult,
-} from '../ISendersRepository';
+import { ISendersSearchParams } from '../../usecases/SearchSenders/dtos/ISendersSearchParams';
+import { ISendersSearchResult } from '../../usecases/SearchSenders/dtos/ISendersSearchResult';
+import ISendersRepository from '../ISendersRepository';
 
 class InMemorySendersRepository implements ISendersRepository {
   private repository: Sender[] = [];
@@ -24,7 +23,7 @@ class InMemorySendersRepository implements ISendersRepository {
     query,
     page,
     perPage,
-  }: SendersSearchParams): Promise<SendersSearchResult> {
+  }: ISendersSearchParams): Promise<ISendersSearchResult> {
     let senderList = this.repository;
 
     if (query) {

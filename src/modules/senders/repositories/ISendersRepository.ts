@@ -1,21 +1,13 @@
 import Sender from '@modules/senders/entities/sender';
 
-export type SendersSearchParams = {
-  query?: string;
-  page: number;
-  perPage: number;
-};
-
-export type SendersSearchResult = {
-  data: Sender[];
-  totalCount: number;
-};
+import { ISendersSearchParams } from '../usecases/SearchSenders/dtos/ISendersSearchParams';
+import { ISendersSearchResult } from '../usecases/SearchSenders/dtos/ISendersSearchResult';
 
 interface ISendersRepository {
   findAll(): Promise<Sender[]>;
   findById(id: string): Promise<Sender>;
   findDefaultSender(): Promise<Sender>;
-  search(params: SendersSearchParams): Promise<SendersSearchResult>;
+  search(params: ISendersSearchParams): Promise<ISendersSearchResult>;
   create(sender: Sender): Promise<void>;
   save(sender: Sender): Promise<void>;
 }

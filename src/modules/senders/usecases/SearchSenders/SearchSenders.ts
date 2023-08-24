@@ -1,16 +1,7 @@
-import Sender from '@modules/senders/entities/sender';
 import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
 
-type SearchSendersRequest = {
-  query?: string;
-  page?: number;
-  perPage?: number;
-};
-
-type SearchSendersResponse = {
-  data: Sender[];
-  totalCount: number;
-};
+import { ISendersSearchParams } from './dtos/ISendersSearchParams';
+import { ISendersSearchResult } from './dtos/ISendersSearchResult';
 
 export class SearchSenders {
   constructor(private sendersRepository: ISendersRepository) {}
@@ -19,7 +10,7 @@ export class SearchSenders {
     query,
     page = 1,
     perPage = 20,
-  }: SearchSendersRequest): Promise<SearchSendersResponse> {
+  }: ISendersSearchParams): Promise<ISendersSearchResult> {
     const { data, totalCount } = await this.sendersRepository.search({
       query,
       page,

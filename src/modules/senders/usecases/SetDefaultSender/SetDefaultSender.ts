@@ -1,16 +1,13 @@
 import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
 
+import { ISetDefaultSenderRequest } from './dtos/ISetDefaultSenderPayload';
 import InvalidSenderError from './errors/InvalidSenderError';
-
-type SetDefaultSenderRequest = {
-  senderId: string;
-};
 
 class SetDefaultSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
   async execute(
-    request: SetDefaultSenderRequest
+    request: ISetDefaultSenderRequest
   ): Promise<InvalidSenderError | null> {
     const { senderId } = request;
 

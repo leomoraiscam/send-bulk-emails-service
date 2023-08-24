@@ -1,14 +1,8 @@
 import { v4 as uuidV4 } from 'uuid';
 
+import { ISenderProps } from './dtos/ISenderProps';
 import Email from './email';
 import Name from './name';
-
-interface ISenderProps {
-  name: Name;
-  email: Email;
-  isValidated?: boolean;
-  isDefault?: boolean;
-}
 
 class Sender {
   private readonly _id: string;
