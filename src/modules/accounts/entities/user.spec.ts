@@ -1,7 +1,4 @@
-import Email from './email';
-import Name from './name';
-import Password from './password';
-import User from './user';
+import { Email, Name, Password, User } from '.';
 
 describe('User Domain Entity', () => {
   it('should be able to create a user', () => {

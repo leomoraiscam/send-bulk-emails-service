@@ -1,10 +1,7 @@
-import Email from '@modules/accounts/entities/email';
-import Name from '@modules/accounts/entities/name';
-import Password from '@modules/accounts/entities/password';
-import User from '@modules/accounts/entities/user';
+import { Email, Name, Password, User } from '@modules/accounts/entities';
 
-import InMemoryUsersRepository from '../../repositories/in-memory/InMemoryUsersRepository';
-import AuthenticateUser from './AuthenticateUser';
+import { InMemoryUsersRepository } from '../../repositories/in-memory/InMemoryUsersRepository';
+import { AuthenticateUser } from './AuthenticateUser';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
 let authenticateUser: AuthenticateUser;

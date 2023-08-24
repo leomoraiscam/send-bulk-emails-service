@@ -1,6 +1,6 @@
-import InvalidPasswordLengthError from './errors/InvalidPasswordLengthError';
+import { InvalidPasswordLengthError } from './errors/InvalidPasswordLengthError';
 
-class Password {
+export class Password {
   private readonly password: string;
   private readonly hashed?: boolean;
 
@@ -39,5 +39,3 @@ class Password {
     return new Password(password, hashed);
   }
 }
-
-export default Password;

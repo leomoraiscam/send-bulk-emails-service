@@ -1,8 +1,8 @@
-import User from '@modules/accounts/entities/user';
+import { User } from '@modules/accounts/entities';
 
 import { IUsersRepository } from '../IUsersRepository';
 
-class InMemoryUsersRepository implements IUsersRepository {
+export class InMemoryUsersRepository implements IUsersRepository {
   private repository: User[] = [];
 
   async findByEmail(email: string): Promise<User | null> {
@@ -21,5 +21,3 @@ class InMemoryUsersRepository implements IUsersRepository {
     this.repository.push(user);
   }
 }
-
-export default InMemoryUsersRepository;

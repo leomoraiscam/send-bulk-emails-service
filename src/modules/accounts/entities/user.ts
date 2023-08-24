@@ -1,9 +1,7 @@
+import { Name, Email, Password } from '.';
 import { IUserProps } from './dtos/IUserProps';
-import Email from './email';
-import Name from './name';
-import Password from './password';
 
-class User {
+export class User {
   private readonly _name: Name;
   private readonly _email: Email;
   private readonly _password: Password;
@@ -30,5 +28,3 @@ class User {
     return new User(name, email, password);
   }
 }
-
-export default User;

@@ -1,18 +1,17 @@
-import Email from '@modules/accounts/entities/email';
-import InvalidEmailError from '@modules/accounts/entities/errors/InvalidEmailError';
-import InvalidNameError from '@modules/accounts/entities/errors/InvalidNameError';
-import InvalidPasswordLengthError from '@modules/accounts/entities/errors/InvalidPasswordLengthError';
-import Name from '@modules/accounts/entities/name';
-import Password from '@modules/accounts/entities/password';
-import User from '@modules/accounts/entities/user';
+import { Email, Name, Password, User } from '@modules/accounts/entities';
+import {
+  InvalidEmailError,
+  InvalidNameError,
+  InvalidPasswordLengthError,
+} from '@modules/accounts/entities/errors';
 
 import { IUsersRepository } from '../../repositories/IUsersRepository';
 import { IRegisterUserPayload } from './dtos/IRegisterUserPayload';
-import AccountAlreadyExistsError from './errors/AccountAlreadyExistsError';
+import { AccountAlreadyExistsError } from './errors/AccountAlreadyExistsError';
 
 export type RegisterUserResponse = Partial<IRegisterUserPayload>;
 
-class RegisterUser {
+export class RegisterUser {
   constructor(private usersRepository: IUsersRepository) {}
 
   async execute(
@@ -64,5 +63,3 @@ class RegisterUser {
     };
   }
 }
-
-export default RegisterUser;

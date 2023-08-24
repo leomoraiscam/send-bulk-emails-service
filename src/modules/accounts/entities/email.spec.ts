@@ -1,4 +1,4 @@
-import Email from './email';
+import { Email } from './email';
 
 describe('User email value object', () => {
   it('should not be able to create a email when the same contains null strings', () => {

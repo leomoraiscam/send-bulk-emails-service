@@ -1,4 +1,4 @@
-import Password from './password';
+import { Password } from './password';
 
 describe('User password object value', () => {
   it('should accept valid password', () => {

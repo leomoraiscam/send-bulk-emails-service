@@ -1,12 +1,12 @@
 import { compare } from 'bcryptjs';
 
-import JWT from '@modules/accounts/entities/jwt';
+import { JWT } from '@modules/accounts/entities';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 
 import { IAuthenticateUserRequest } from './dtos/IAuthenticateUserPayload';
-import InvalidEmailOrPasswordError from './errors/InvalidEmailOrPasswordError';
+import { InvalidEmailOrPasswordError } from './errors/InvalidEmailOrPasswordError';
 
-class AuthenticateUser {
+export class AuthenticateUser {
   constructor(private usersRepository: IUsersRepository) {}
 
   async execute(
@@ -38,5 +38,3 @@ class AuthenticateUser {
     };
   }
 }
-
-export default AuthenticateUser;

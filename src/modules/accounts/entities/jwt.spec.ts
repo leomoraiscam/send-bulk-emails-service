@@ -1,9 +1,5 @@
+import { Email, User, JWT, Name, Password } from '.';
 import { IJWTTokenPayload } from './dtos/IJwtProps';
-import Email from './email';
-import JWT from './jwt';
-import Name from './name';
-import Password from './password';
-import User from './user';
 
 describe('User JWT object value', () => {
   it('should be able to create new user', () => {

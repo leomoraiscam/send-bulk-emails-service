@@ -2,10 +2,10 @@ import { sign, verify } from 'jsonwebtoken';
 
 import auth from '@config/auth';
 
+import { User } from '.';
 import { IJWTProps, IJWTTokenPayload } from './dtos/IJwtProps';
-import User from './user';
 
-class JWT {
+export class JWT {
   private readonly userId: string;
   private readonly token: string;
 
@@ -49,5 +49,3 @@ class JWT {
     return new JWT({ userId: 'userId', token });
   }
 }
-
-export default JWT;
