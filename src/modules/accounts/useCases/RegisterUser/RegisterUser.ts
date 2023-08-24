@@ -7,21 +7,16 @@ import Password from '@modules/accounts/entities/password';
 import User from '@modules/accounts/entities/user';
 
 import { IUsersRepository } from '../../repositories/IUsersRepository';
+import { IRegisterUserPayload } from './dtos/IRegisterUserPayload';
 import AccountAlreadyExistsError from './errors/AccountAlreadyExistsError';
 
-export interface IRegisterUserRequest {
-  name: string;
-  email: string;
-  password: string;
-}
-
-export type RegisterUserResponse = Partial<IRegisterUserRequest>;
+export type RegisterUserResponse = Partial<IRegisterUserPayload>;
 
 class RegisterUser {
   constructor(private usersRepository: IUsersRepository) {}
 
   async execute(
-    request: IRegisterUserRequest
+    request: IRegisterUserPayload
   ): Promise<RegisterUserResponse | Error> {
     const { name, email, password } = request;
 

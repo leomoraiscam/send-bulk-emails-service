@@ -1,12 +1,7 @@
+import { IUserProps } from './dtos/IUserProps';
 import Email from './email';
 import Name from './name';
 import Password from './password';
-
-interface IUserProps {
-  name: Name;
-  email: Email;
-  password: Password;
-}
 
 class User {
   private readonly _name: Name;

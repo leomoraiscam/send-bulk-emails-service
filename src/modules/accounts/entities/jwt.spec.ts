@@ -1,5 +1,6 @@
+import { IJWTTokenPayload } from './dtos/IJwtProps';
 import Email from './email';
-import JWT, { IJWTTokenPayload } from './jwt';
+import JWT from './jwt';
 import Name from './name';
 import Password from './password';
 import User from './user';

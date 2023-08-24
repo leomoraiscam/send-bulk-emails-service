@@ -3,12 +3,8 @@ import { compare } from 'bcryptjs';
 import JWT from '@modules/accounts/entities/jwt';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 
+import { IAuthenticateUserRequest } from './dtos/IAuthenticateUserPayload';
 import InvalidEmailOrPasswordError from './errors/InvalidEmailOrPasswordError';
-
-interface IAuthenticateUserRequest {
-  email: string;
-  password?: string;
-}
 
 class AuthenticateUser {
   constructor(private usersRepository: IUsersRepository) {}

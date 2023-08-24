@@ -2,17 +2,8 @@ import { sign, verify } from 'jsonwebtoken';
 
 import auth from '@config/auth';
 
+import { IJWTProps, IJWTTokenPayload } from './dtos/IJwtProps';
 import User from './user';
-
-interface IJWTData {
-  userId: string;
-  token: string;
-}
-
-export interface IJWTTokenPayload {
-  exp: number;
-  sub: string;
-}
 
 class JWT {
   private readonly userId: string;
@@ -22,7 +13,7 @@ class JWT {
     return this.token;
   }
 
-  private constructor({ userId, token }: IJWTData) {
+  private constructor({ userId, token }: IJWTProps) {
     this.userId = userId;
     this.token = token;
   }
