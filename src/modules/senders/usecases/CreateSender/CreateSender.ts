@@ -1,13 +1,13 @@
-import InvalidEmailError from '@modules/accounts/entities/errors/InvalidEmailError';
-import InvalidNameError from '@modules/accounts/entities/errors/InvalidNameError';
-import Email from '@modules/senders/entities/email';
-import Name from '@modules/senders/entities/name';
-import Sender from '@modules/senders/entities/sender';
-import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
+import { Name, Email, Sender } from '@modules/senders/entities';
+import {
+  InvalidNameError,
+  InvalidEmailError,
+} from '@modules/senders/entities/errors';
+import { ISendersRepository } from '@modules/senders/repositories/ISendersRepository';
 
 import { ICreateSenderRequest } from './dtos/ICreateSenderPayload';
 
-class CreateSender {
+export class CreateSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
   async execute(request: ICreateSenderRequest): Promise<Sender | Error> {
@@ -39,5 +39,3 @@ class CreateSender {
     return senderOrError;
   }
 }
-
-export default CreateSender;

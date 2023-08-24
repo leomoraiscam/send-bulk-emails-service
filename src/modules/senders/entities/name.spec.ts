@@ -1,4 +1,4 @@
-import Name from './name';
+import { Name } from '.';
 
 describe('Sender name object value', () => {
   it('should be able to create a name with valid name', () => {

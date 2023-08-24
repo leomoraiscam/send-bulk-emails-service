@@ -1,6 +1,6 @@
-import InvalidNameError from './errors/InvalidNameError';
+import { InvalidNameError } from './errors';
 
-class Name {
+export class Name {
   private readonly name: string;
 
   get value(): string {
@@ -33,5 +33,3 @@ class Name {
     return new Name(name);
   }
 }
-
-export default Name;

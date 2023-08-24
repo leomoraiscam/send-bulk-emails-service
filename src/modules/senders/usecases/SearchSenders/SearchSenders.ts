@@ -1,4 +1,4 @@
-import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
+import { ISendersRepository } from '@modules/senders/repositories/ISendersRepository';
 
 import { ISendersSearchParams } from './dtos/ISendersSearchParams';
 import { ISendersSearchResult } from './dtos/ISendersSearchResult';

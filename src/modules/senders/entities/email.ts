@@ -1,6 +1,6 @@
-import InvalidEmailError from './errors/InvalidEmailError';
+import { InvalidEmailError } from './errors';
 
-class Email {
+export class Email {
   private readonly email: string;
 
   get value(): string {
@@ -64,5 +64,3 @@ class Email {
     return new Email(email);
   }
 }
-
-export default Email;

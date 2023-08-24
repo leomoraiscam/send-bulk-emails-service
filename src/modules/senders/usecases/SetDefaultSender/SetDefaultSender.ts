@@ -1,9 +1,9 @@
-import ISendersRepository from '@modules/senders/repositories/ISendersRepository';
+import { ISendersRepository } from '@modules/senders/repositories/ISendersRepository';
 
 import { ISetDefaultSenderRequest } from './dtos/ISetDefaultSenderPayload';
-import InvalidSenderError from './errors/InvalidSenderError';
+import { InvalidSenderError } from './errors/InvalidSenderError';
 
-class SetDefaultSender {
+export class SetDefaultSender {
   constructor(private sendersRepository: ISendersRepository) {}
 
   async execute(
@@ -33,5 +33,3 @@ class SetDefaultSender {
     return null;
   }
 }
-
-export default SetDefaultSender;

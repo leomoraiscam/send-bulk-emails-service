@@ -1,6 +1,4 @@
-import Email from './email';
-import Name from './name';
-import Sender from './sender';
+import { Email, Name, Sender } from '.';
 
 describe('Sender Domain Entity', () => {
   it('should be able to create new sender', () => {

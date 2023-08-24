@@ -1,9 +1,7 @@
-import Email from '@modules/senders/entities/email';
-import Name from '@modules/senders/entities/name';
-import Sender from '@modules/senders/entities/sender';
-import InMemorySendersRepository from '@modules/senders/repositories/in-memory/InMemorySendersRepository';
+import { Name, Email, Sender } from '@modules/senders/entities';
+import { InMemorySendersRepository } from '@modules/senders/repositories/in-memory/InMemorySendersRepository';
 
-import GetAllSenders from './GetAllSenders';
+import { GetAllSenders } from './GetAllSenders';
 
 let inMemorySendersRepository: InMemorySendersRepository;
 let getAllSenders: GetAllSenders;

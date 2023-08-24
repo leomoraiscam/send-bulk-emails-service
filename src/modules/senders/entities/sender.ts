@@ -1,10 +1,9 @@
 import { v4 as uuidV4 } from 'uuid';
 
+import { Email, Name } from '.';
 import { ISenderProps } from './dtos/ISenderProps';
-import Email from './email';
-import Name from './name';
 
-class Sender {
+export class Sender {
   private readonly _id: string;
   private readonly _name: Name;
   private readonly _email: Email;
@@ -45,5 +44,3 @@ class Sender {
     return new Sender(name, email, isDefault, id);
   }
 }
-
-export default Sender;

@@ -1,4 +1,4 @@
-import Sender from '@modules/senders/entities/sender';
+import { Sender } from '@modules/senders/entities';
 
 export interface ISendersSearchResult {
   data: Sender[];

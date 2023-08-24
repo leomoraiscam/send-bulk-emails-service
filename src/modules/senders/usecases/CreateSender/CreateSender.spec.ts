@@ -1,6 +1,6 @@
-import InMemorySendersRepository from '@modules/senders/repositories/in-memory/InMemorySendersRepository';
+import { InMemorySendersRepository } from '@modules/senders/repositories/in-memory/InMemorySendersRepository';
 
-import CreateSender from './CreateSender';
+import { CreateSender } from './CreateSender';
 
 let inMemorySendersRepository: InMemorySendersRepository;
 let createSender: CreateSender;

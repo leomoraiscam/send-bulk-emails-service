@@ -1,10 +1,10 @@
-import Sender from '@modules/senders/entities/sender';
+import { Sender } from '@modules/senders/entities';
 
 import { ISendersSearchParams } from '../../usecases/SearchSenders/dtos/ISendersSearchParams';
 import { ISendersSearchResult } from '../../usecases/SearchSenders/dtos/ISendersSearchResult';
-import ISendersRepository from '../ISendersRepository';
+import { ISendersRepository } from '../ISendersRepository';
 
-class InMemorySendersRepository implements ISendersRepository {
+export class InMemorySendersRepository implements ISendersRepository {
   private repository: Sender[] = [];
 
   async findAll(): Promise<Sender[]> {
@@ -53,5 +53,3 @@ class InMemorySendersRepository implements ISendersRepository {
     this.repository[senderIndex] = sender;
   }
 }
-
-export default InMemorySendersRepository;
