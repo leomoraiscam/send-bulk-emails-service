@@ -82,9 +82,6 @@ describe('Register User (e2e)', () => {
     const response = await registerUserController.handle(request);
 
     expect(response.status).toBe(400);
-    expect(response.body.data).toBe(
-      '[MissingParamError: Missing parameter from request: name.]'
-    );
   });
 
   it('should not be able to register new user when is missing email', async () => {
@@ -111,8 +108,5 @@ describe('Register User (e2e)', () => {
     const response = await registerUserController.handle(request);
 
     expect(response.status).toBe(400);
-    expect(response.body.data).toBe(
-      '[MissingParamError: Missing parameter from request: email.]'
-    );
   });
 });

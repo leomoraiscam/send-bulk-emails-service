@@ -16,34 +16,43 @@ export class RegisterUserController {
   async handle(request: IRegisterUserPayload) {
     const response = await this.registerUser.execute(request);
 
-    if (!request.name || !request.email) {
-      let missing = !request.name ? 'name ' : '';
+    try {
+      if (!request.name || !request.email) {
+        let missing = !request.name ? 'name ' : '';
 
-      missing += !request.email ? 'email' : '';
+        missing += !request.email ? 'email' : '';
+
+        return {
+          status: 400,
+          body: {
+            data: new MissingParamError(missing.trim()),
+          },
+        };
+      }
+
+      if (response instanceof Error) {
+        return {
+          status: 400,
+          body: {
+            data: response.name,
+          },
+        };
+      }
 
       return {
-        status: 400,
+        status: 201,
         body: {
-          data: new MissingParamError(missing.trim()),
+          name: request.name,
+          email: request.email,
+        },
+      };
+    } catch (err) {
+      return {
+        status: 500,
+        body: {
+          data: err,
         },
       };
     }
-
-    if (response instanceof Error) {
-      return {
-        status: 400,
-        body: {
-          data: response.name,
-        },
-      };
-    }
-
-    return {
-      status: 201,
-      body: {
-        name: request.name,
-        email: request.email,
-      },
-    };
   }
 }
