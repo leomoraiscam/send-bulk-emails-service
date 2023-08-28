@@ -2,7 +2,7 @@ import { Password } from './password';
 
 describe('User password object value', () => {
   it('should accept valid password', () => {
-    const passwordOrError = Password.create('123456') as Password;
+    const passwordOrError = Password.create('123456', true) as Password;
 
     expect(passwordOrError.value).toBe('123456');
   });
