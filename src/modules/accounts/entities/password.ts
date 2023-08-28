@@ -1,3 +1,4 @@
+import { InvalidSecurityPasswordError } from './errors';
 import { InvalidPasswordLengthError } from './errors/InvalidPasswordLengthError';
 
 export class Password {
@@ -34,6 +35,10 @@ export class Password {
 
     if (!isValid) {
       return new InvalidPasswordLengthError();
+    }
+
+    if (!hashed) {
+      return new InvalidSecurityPasswordError();
     }
 
     return new Password(password, hashed);
