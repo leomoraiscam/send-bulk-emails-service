@@ -1,5 +1,6 @@
 import { InMemoryUsersRepository } from '@modules/accounts/repositories/in-memory/InMemoryUsersRepository';
 
+import { InMemoryHashProvider } from '../../../../infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { IRegisterUserPayload as IRegisterUserRequest } from './dtos/IRegisterUserPayload';
 import { RegisterUser } from './RegisterUser';
 import { RegisterUserController } from './RegisterUserController';
@@ -12,15 +13,11 @@ describe('Register User (e2e)', () => {
       password: 'test@1234',
     };
 
-    const hashProvider = {
-      generateHash: jest.fn(),
-      compareHash: jest.fn(),
-    };
-
+    const inMemoryHashProvider = new InMemoryHashProvider();
     const inMemoryUsersRepository = new InMemoryUsersRepository();
     const registerUserUseCase = new RegisterUser(
       inMemoryUsersRepository,
-      hashProvider
+      inMemoryHashProvider
     );
     const registerUserController = new RegisterUserController(
       registerUserUseCase
