@@ -1,3 +1,5 @@
+import { IHashProvider } from 'infra/providers/HashProvider/models/IHashProvider';
+
 import { Email, Name, Password, User } from '@modules/accounts/entities';
 import {
   InvalidEmailError,
@@ -12,11 +14,19 @@ import { AccountAlreadyExistsError } from './errors/AccountAlreadyExistsError';
 export type RegisterUserResponse = Partial<IRegisterUserPayload>;
 
 export class RegisterUser {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashProvider: IHashProvider
+  ) {}
 
   async execute(
     request: IRegisterUserPayload
-  ): Promise<RegisterUserResponse | Error> {
+  ): Promise<
+    | RegisterUserResponse
+    | InvalidNameError
+    | InvalidEmailError
+    | InvalidPasswordLengthError
+  > {
     const { name, email, password } = request;
 
     const nameOrError = Name.create(name) as Name;
@@ -31,7 +41,9 @@ export class RegisterUser {
       return new InvalidEmailError(email);
     }
 
-    const passwordOrError = Password.create(password) as Password;
+    // const hashedPassword = await this.hashProvider.generateHash(password);
+
+    const passwordOrError = Password.create(password, true) as Password;
 
     if (passwordOrError instanceof Error) {
       return new InvalidPasswordLengthError();
