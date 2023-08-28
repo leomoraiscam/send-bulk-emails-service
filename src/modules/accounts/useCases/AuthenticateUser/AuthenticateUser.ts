@@ -1,13 +1,15 @@
-import { compare } from 'bcryptjs';
-
 import { JWT } from '@modules/accounts/entities';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 
+import { IHashProvider } from '../../../../infra/providers/HashProvider/models/IHashProvider';
 import { IAuthenticateUserRequest } from './dtos/IAuthenticateUserPayload';
 import { InvalidEmailOrPasswordError } from './errors/InvalidEmailOrPasswordError';
 
 export class AuthenticateUser {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(
+    private usersRepository: IUsersRepository,
+    private hashProvider: IHashProvider
+  ) {}
 
   async execute(
     request: IAuthenticateUserRequest
@@ -22,7 +24,10 @@ export class AuthenticateUser {
     }
 
     if (user.password.isHashedValue) {
-      isPasswordValid = await compare(password, user.password.value);
+      isPasswordValid = await this.hashProvider.compareHash(
+        password,
+        user.password.value
+      );
     } else {
       isPasswordValid = password === user.password.value;
     }
