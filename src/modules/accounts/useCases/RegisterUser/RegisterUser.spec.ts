@@ -1,15 +1,21 @@
 import { Email, Name, Password, User } from '@modules/accounts/entities';
 
+import { InMemoryHashProvider } from '../../../../infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { InMemoryUsersRepository } from '../../repositories/in-memory/InMemoryUsersRepository';
 import { RegisterUser } from './RegisterUser';
 
 let inMemoryUsersRepository: InMemoryUsersRepository;
+let inMemoryHashProvider: InMemoryHashProvider;
 let registerUser: RegisterUser;
 
 describe('Register User Use Case', () => {
   beforeEach(() => {
     inMemoryUsersRepository = new InMemoryUsersRepository();
-    registerUser = new RegisterUser(inMemoryUsersRepository);
+    inMemoryHashProvider = new InMemoryHashProvider();
+    registerUser = new RegisterUser(
+      inMemoryUsersRepository,
+      inMemoryHashProvider
+    );
   });
 
   it('should be able to register new user', async () => {

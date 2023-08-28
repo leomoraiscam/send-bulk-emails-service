@@ -21,12 +21,7 @@ export class RegisterUser {
 
   async execute(
     request: IRegisterUserPayload
-  ): Promise<
-    | RegisterUserResponse
-    | InvalidNameError
-    | InvalidEmailError
-    | InvalidPasswordLengthError
-  > {
+  ): Promise<RegisterUserResponse | Error> {
     const { name, email, password } = request;
 
     const nameOrError = Name.create(name) as Name;
@@ -41,9 +36,9 @@ export class RegisterUser {
       return new InvalidEmailError(email);
     }
 
-    // const hashedPassword = await this.hashProvider.generateHash(password);
+    const hashedPassword = await this.hashProvider.generateHash(password);
 
-    const passwordOrError = Password.create(password, true) as Password;
+    const passwordOrError = Password.create(hashedPassword, true) as Password;
 
     if (passwordOrError instanceof Error) {
       return new InvalidPasswordLengthError();
