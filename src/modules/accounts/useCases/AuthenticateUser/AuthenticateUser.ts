@@ -1,7 +1,7 @@
+import { IHashProvider } from '@infra/providers/HashProvider/models/IHashProvider';
 import { JWT } from '@modules/accounts/entities';
 import { IUsersRepository } from '@modules/accounts/repositories/IUsersRepository';
 
-import { IHashProvider } from '../../../../infra/providers/HashProvider/models/IHashProvider';
 import { IAuthenticateUserRequest } from './dtos/IAuthenticateUserPayload';
 import { InvalidEmailOrPasswordError } from './errors/InvalidEmailOrPasswordError';
 

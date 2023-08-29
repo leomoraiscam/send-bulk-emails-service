@@ -1,6 +1,6 @@
+import { InMemoryHashProvider } from '@infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { InMemoryUsersRepository } from '@modules/accounts/repositories/in-memory/InMemoryUsersRepository';
 
-import { InMemoryHashProvider } from '../../../../infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { IRegisterUserPayload as IRegisterUserRequest } from './dtos/IRegisterUserPayload';
 import { RegisterUser } from './RegisterUser';
 import { RegisterUserController } from './RegisterUserController';

@@ -1,5 +1,4 @@
-import { IHashProvider } from 'infra/providers/HashProvider/models/IHashProvider';
-
+import { IHashProvider } from '@infra/providers/HashProvider/models/IHashProvider';
 import { Email, Name, Password, User } from '@modules/accounts/entities';
 import {
   InvalidEmailError,

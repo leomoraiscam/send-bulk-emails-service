@@ -1,6 +1,6 @@
+import { InMemoryHashProvider } from '@infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { Email, Name, Password, User } from '@modules/accounts/entities';
 
-import { InMemoryHashProvider } from '../../../../infra/providers/HashProvider/in-memory/InMemoryHashProvider';
 import { InMemoryUsersRepository } from '../../repositories/in-memory/InMemoryUsersRepository';
 import { AuthenticateUser } from './AuthenticateUser';
 
