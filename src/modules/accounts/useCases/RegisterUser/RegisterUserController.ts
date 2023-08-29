@@ -1,14 +1,6 @@
-// eslint-disable-next-line max-classes-per-file
 import { IRegisterUserPayload } from './dtos/IRegisterUserPayload';
+import { MissingParamError } from './errors/MissingParamError';
 import { RegisterUser } from './RegisterUser';
-
-export class MissingParamError extends Error {
-  public readonly name = 'MissingParamError';
-
-  constructor(param: string) {
-    super(`Missing parameter from request: ${param}.`);
-  }
-}
 
 export class RegisterUserController {
   constructor(private registerUser: RegisterUser) {}
