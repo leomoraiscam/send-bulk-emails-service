@@ -1,39 +1,49 @@
 import { Email, User, JWT, Name, Password } from '.';
 import { IJWTTokenPayload } from './dtos/IJwtProps';
+import { InvalidJWTTokenError } from './errors';
+
+let userOrError;
 
 describe('User JWT object value', () => {
+  beforeEach(() => {
+    const nameOrError = Name.create('John Doe').value as Name;
+    const emailOrError = Email.create('john@doe.com').value as Email;
+    const passwordOrError = Password.create('123456', true).value as Password;
+
+    userOrError = User.create({
+      name: nameOrError,
+      email: emailOrError,
+      password: passwordOrError,
+    });
+  });
+
   it('should be able to create new user', () => {
-    const user = User.create({
-      name: Name.create('John Doe') as Name,
-      email: Email.create('john@doe.com') as Email,
-      password: Password.create('123456') as Password,
-    }) as User;
+    const jwtOrError = JWT.signUser(userOrError);
 
-    const jwt = JWT.signUser(user);
-
-    expect(jwt.value).toEqual(expect.any(String));
+    expect(jwtOrError.isRight()).toBeTruthy();
+    expect(jwtOrError.value.value).toEqual(expect.any(String));
   });
 
   it('should not be able to initialize JWT from invalid token', () => {
-    expect(() => JWT.createFromJWT('invalid-token')).toThrow();
+    const jwtOrError = JWT.createFromJWT('invalid-token');
+
+    expect(jwtOrError.isLeft()).toBeTruthy();
   });
 
   it('should be able to decode JWT token', () => {
-    const user = User.create({
-      name: Name.create('John Doe') as Name,
-      email: Email.create('john@doe.com') as Email,
-      password: Password.create('123456') as Password,
-    }) as User;
+    const jwtOrError = JWT.signUser(userOrError);
 
-    const jwt = JWT.signUser(user);
+    const decodedOrError = JWT.decodeToken(jwtOrError.value.value);
+    const decoded = decodedOrError.value as IJWTTokenPayload;
 
-    const decodedOrError = JWT.decodeToken(jwt.value);
-    const decoded = decodedOrError as IJWTTokenPayload;
-
+    expect(decodedOrError.isRight()).toBe(true);
     expect(decoded.exp).toEqual(expect.any(Number));
   });
 
   it('should not be able to decode invalid JWT token', () => {
-    expect(() => JWT.decodeToken('invalid-token')).toThrow();
+    const jwtOrError = JWT.decodeToken('invalid-token');
+
+    expect(jwtOrError.isLeft()).toBe(true);
+    expect(jwtOrError.value).toEqual(new InvalidJWTTokenError());
   });
 });
