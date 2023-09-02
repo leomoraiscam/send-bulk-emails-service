@@ -1,17 +1,19 @@
+import { Either, left, right } from '@core/logic/Either';
+
 import { InvalidNameError } from './errors/InvalidNameError';
 
 export class Name {
   private readonly name: string;
 
-  get value(): string {
-    return this.name;
-  }
-
   private constructor(name: string) {
     this.name = name;
   }
 
-  static validate(name: string): boolean {
+  public get value(): string {
+    return this.name;
+  }
+
+  public static validate(name: string): boolean {
     if (!name) {
       return false;
     }
@@ -23,13 +25,13 @@ export class Name {
     return true;
   }
 
-  static create(name: string): Name | Error {
+  public static create(name: string): Either<InvalidNameError, Name> {
     const isValid = this.validate(name);
 
     if (!isValid) {
-      return new InvalidNameError(name);
+      return left(new InvalidNameError(name));
     }
 
-    return new Name(name);
+    return right(new Name(name));
   }
 }

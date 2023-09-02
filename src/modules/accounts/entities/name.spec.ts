@@ -2,20 +2,26 @@ import { Name } from '.';
 
 describe('User name object value', () => {
   it('should be able to create a name with valid name', () => {
-    const name = Name.create('john') as Name;
+    const nameOrError = Name.create('john');
 
-    expect(name.value).toBe('john');
+    expect(nameOrError.isRight()).toBeTruthy();
   });
 
   it('should not be able to create a name with invalid name (when the same a not send)', () => {
-    expect(Name.create('')).toBeInstanceOf(Error);
+    const nameOrError = Name.create('');
+
+    expect(nameOrError.isLeft()).toBeTruthy();
   });
 
   it('should not be able to create a name with invalid name (when the same less 3 chars)', () => {
-    expect(Name.create('l')).toBeInstanceOf(Error);
+    const nameOrError = Name.create('l');
+
+    expect(nameOrError.isLeft()).toBeTruthy();
   });
 
   it('should not be able to create a name with invalid name (when the same than 255 chars)', () => {
-    expect(Name.create('l'.repeat(256))).toBeInstanceOf(Error);
+    const nameOrError = Name.create('l'.repeat(256));
+
+    expect(nameOrError.isLeft()).toBeTruthy();
   });
 });
