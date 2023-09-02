@@ -1,17 +1,19 @@
+import { Either, left, right } from '@core/logic/Either';
+
 import { InvalidEmailError } from './errors';
 
 export class Email {
   private readonly email: string;
 
-  get value(): string {
-    return this.email;
-  }
-
-  constructor(email: string) {
+  private constructor(email: string) {
     this.email = email;
   }
 
-  static validate(email: string): boolean {
+  public get value(): string {
+    return this.email;
+  }
+
+  public static validate(email: string): boolean {
     const emailRegex =
       /^[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~](\.?[-!#$%&'*+/0-9=?A-Z^_a-z`{|}~])*@[a-zA-Z0-9](-*\.?[a-zA-Z0-9])*\.[a-zA-Z](-?[a-zA-Z0-9])+$/;
 
@@ -54,13 +56,13 @@ export class Email {
     return true;
   }
 
-  static create(email: string): Email | Error {
+  public static create(email: string): Either<InvalidEmailError, Email> {
     const isValid = this.validate(email);
 
     if (!isValid) {
-      return new InvalidEmailError(email);
+      return left(new InvalidEmailError(email));
     }
 
-    return new Email(email);
+    return right(new Email(email));
   }
 }
