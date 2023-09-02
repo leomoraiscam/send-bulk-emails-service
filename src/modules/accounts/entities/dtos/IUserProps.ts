@@ -1,6 +1,4 @@
-import Email from '../email';
-import Name from '../name';
-import Password from '../password';
+import { Name, Email, Password } from '..';
 
 export interface IUserProps {
   name: Name;
