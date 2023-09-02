@@ -1,3 +1,5 @@
+import { Either, left, right } from '@core/logic/Either';
+
 import { InvalidSecurityPasswordError } from './errors';
 import { InvalidPasswordLengthError } from './errors/InvalidPasswordLengthError';
 
@@ -5,20 +7,20 @@ export class Password {
   private readonly password: string;
   private readonly hashed?: boolean;
 
-  get value(): string {
-    return this.password;
-  }
-
-  get isHashedValue(): boolean {
-    return this.hashed;
-  }
-
-  constructor(password: string, hashed: boolean) {
+  private constructor(password: string, hashed: boolean) {
     this.password = password;
     this.hashed = hashed;
   }
 
-  static validate(password: string) {
+  public get value(): string {
+    return this.password;
+  }
+
+  public get isHashedValue(): boolean {
+    return this.hashed;
+  }
+
+  public static validate(password: string): boolean {
     if (!password) {
       return false;
     }
@@ -30,17 +32,23 @@ export class Password {
     return true;
   }
 
-  static create(password: string, hashed = false): Password | Error {
+  public static create(
+    password: string,
+    hashed = false
+  ): Either<
+    InvalidPasswordLengthError | InvalidSecurityPasswordError,
+    Password
+  > {
     const isValid = this.validate(password);
 
     if (!isValid) {
-      return new InvalidPasswordLengthError();
+      return left(new InvalidPasswordLengthError());
     }
 
     if (!hashed) {
-      return new InvalidSecurityPasswordError();
+      return left(new InvalidSecurityPasswordError());
     }
 
-    return new Password(password, hashed);
+    return right(new Password(password, hashed));
   }
 }
