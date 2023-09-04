@@ -44,12 +44,14 @@ export class JWT {
     return right(new JWT({ token, userId: jwtPayloadOrError.value.sub }));
   }
 
-  public static signUser({ email }: User): Either<null, JWT> {
+  public static signUser({ email }: User): JWT {
     const token = sign({}, auth.secretKey, {
       subject: String(email),
       expiresIn: auth.expiresIn,
     });
 
-    return right(new JWT({ userId: 'userId', token }));
+    const jwt = new JWT({ userId: 'userId', token });
+
+    return jwt;
   }
 }
