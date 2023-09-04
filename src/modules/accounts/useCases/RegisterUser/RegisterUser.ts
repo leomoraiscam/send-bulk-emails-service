@@ -1,3 +1,4 @@
+import { Either, left, right } from '@core/logic/Either';
 import { IHashProvider } from '@infra/providers/HashProvider/models/IHashProvider';
 import { Email, Name, Password, User } from '@modules/accounts/entities';
 import {
@@ -10,8 +11,6 @@ import { IUsersRepository } from '../../repositories/IUsersRepository';
 import { IRegisterUserPayload } from './dtos/IRegisterUserPayload';
 import { AccountAlreadyExistsError } from './errors/AccountAlreadyExistsError';
 
-export type RegisterUserResponse = Partial<IRegisterUserPayload>;
-
 export class RegisterUser {
   constructor(
     private usersRepository: IUsersRepository,
@@ -20,52 +19,59 @@ export class RegisterUser {
 
   async execute(
     request: IRegisterUserPayload
-  ): Promise<RegisterUserResponse | Error> {
+  ): Promise<
+    Either<
+      | AccountAlreadyExistsError
+      | InvalidNameError
+      | InvalidEmailError
+      | InvalidPasswordLengthError,
+      User
+    >
+  > {
     const { name, email, password } = request;
 
-    const nameOrError = Name.create(name) as Name;
+    const nameOrError = Name.create(name);
 
-    if (nameOrError instanceof Error) {
-      return new InvalidNameError(name);
+    if (nameOrError.isLeft()) {
+      return left(nameOrError.value);
     }
 
-    const emailOrError = Email.create(email) as Email;
+    const emailOrError = Email.create(email);
 
-    if (emailOrError instanceof Error) {
-      return new InvalidEmailError(email);
+    if (emailOrError.isLeft()) {
+      return left(emailOrError.value);
     }
 
     const hashedPassword = await this.hashProvider.generateHash(password);
 
-    const passwordOrError = Password.create(hashedPassword, true) as Password;
+    const passwordOrError = Password.create(hashedPassword, true);
 
-    if (passwordOrError instanceof Error) {
-      return new InvalidPasswordLengthError();
+    if (passwordOrError.isLeft()) {
+      return left(passwordOrError.value);
     }
 
     const userOrError = User.create({
-      name: nameOrError,
-      email: emailOrError,
-      password: passwordOrError,
+      name: nameOrError.value,
+      email: emailOrError.value,
+      password: passwordOrError.value,
     });
 
-    if (userOrError instanceof Error) {
-      throw new Error(`User data is incorrect`);
+    if (userOrError.isLeft()) {
+      return left(userOrError.value);
     }
 
+    const user = userOrError.value;
+
     const userAlreadyExists = await this.usersRepository.findByEmail(
-      userOrError.email.value
+      user.email.value
     );
 
     if (userAlreadyExists) {
-      return new AccountAlreadyExistsError(userOrError.email.value);
+      return left(new AccountAlreadyExistsError(user.email.value));
     }
 
-    await this.usersRepository.create(userOrError);
+    await this.usersRepository.create(user);
 
-    return {
-      name: userOrError.name.value,
-      email: userOrError.email.value,
-    };
+    return right(user);
   }
 }
