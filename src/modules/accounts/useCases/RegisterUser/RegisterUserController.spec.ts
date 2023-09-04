@@ -5,23 +5,28 @@ import { IRegisterUserPayload as IRegisterUserRequest } from './dtos/IRegisterUs
 import { RegisterUser } from './RegisterUser';
 import { RegisterUserController } from './RegisterUserController';
 
+let inMemoryHashProvider: InMemoryHashProvider;
+let inMemoryUsersRepository: InMemoryUsersRepository;
+let registerUserUseCase: RegisterUser;
+let registerUserController: RegisterUserController;
+
 describe('Register User (e2e)', () => {
+  beforeEach(() => {
+    inMemoryHashProvider = new InMemoryHashProvider();
+    inMemoryUsersRepository = new InMemoryUsersRepository();
+    registerUserUseCase = new RegisterUser(
+      inMemoryUsersRepository,
+      inMemoryHashProvider
+    );
+    registerUserController = new RegisterUserController(registerUserUseCase);
+  });
+
   it('should be able to register new user', async () => {
     const request: IRegisterUserRequest = {
       name: 'John Doe',
       email: 'johndoe@gmail.com',
       password: 'test@1234',
     };
-
-    const inMemoryHashProvider = new InMemoryHashProvider();
-    const inMemoryUsersRepository = new InMemoryUsersRepository();
-    const registerUserUseCase = new RegisterUser(
-      inMemoryUsersRepository,
-      inMemoryHashProvider
-    );
-    const registerUserController = new RegisterUserController(
-      registerUserUseCase
-    );
 
     const response = await registerUserController.handle(request);
 
@@ -32,27 +37,15 @@ describe('Register User (e2e)', () => {
     const request: IRegisterUserRequest = {
       name: 'John Doe',
       email: 'johndoe@gmail.com',
-      password: 't',
+      password: '123',
     };
-
-    const hashProvider = {
-      generateHash: jest.fn(),
-      compareHash: jest.fn(),
-    };
-
-    const inMemoryUsersRepository = new InMemoryUsersRepository();
-    const registerUserUseCase = new RegisterUser(
-      inMemoryUsersRepository,
-      hashProvider
-    );
-    const registerUserController = new RegisterUserController(
-      registerUserUseCase
-    );
 
     const response = await registerUserController.handle(request);
 
     expect(response.status).toBe(400);
-    expect(response.body.data).toBe('InvalidPasswordLengthError');
+    expect(response.body.error).toBe(
+      'The password must have between 6 and 255 characters.'
+    );
   });
 
   it('should not be able to register new user when is missing name', async () => {
@@ -62,23 +55,10 @@ describe('Register User (e2e)', () => {
       password: 'test@123',
     };
 
-    const hashProvider = {
-      generateHash: jest.fn(),
-      compareHash: jest.fn(),
-    };
-
-    const inMemoryUsersRepository = new InMemoryUsersRepository();
-    const registerUserUseCase = new RegisterUser(
-      inMemoryUsersRepository,
-      hashProvider
-    );
-    const registerUserController = new RegisterUserController(
-      registerUserUseCase
-    );
-
     const response = await registerUserController.handle(request);
 
     expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Missing parameter from request: name.');
   });
 
   it('should not be able to register new user when is missing email', async () => {
@@ -88,22 +68,9 @@ describe('Register User (e2e)', () => {
       password: 'test@123',
     };
 
-    const hashProvider = {
-      generateHash: jest.fn(),
-      compareHash: jest.fn(),
-    };
-
-    const inMemoryUsersRepository = new InMemoryUsersRepository();
-    const registerUserUseCase = new RegisterUser(
-      inMemoryUsersRepository,
-      hashProvider
-    );
-    const registerUserController = new RegisterUserController(
-      registerUserUseCase
-    );
-
     const response = await registerUserController.handle(request);
 
     expect(response.status).toBe(400);
+    expect(response.body.error).toBe('Missing parameter from request: email.');
   });
 });
