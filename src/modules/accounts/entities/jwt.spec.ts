@@ -18,10 +18,9 @@ describe('User JWT object value', () => {
   });
 
   it('should be able to create new user', () => {
-    const jwtOrError = JWT.signUser(userOrError);
+    const jwt = JWT.signUser(userOrError);
 
-    expect(jwtOrError.isRight()).toBeTruthy();
-    expect(jwtOrError.value.value).toEqual(expect.any(String));
+    expect(jwt.value).toEqual(expect.any(String));
   });
 
   it('should not be able to initialize JWT from invalid token', () => {
@@ -33,7 +32,7 @@ describe('User JWT object value', () => {
   it('should be able to decode JWT token', () => {
     const jwtOrError = JWT.signUser(userOrError);
 
-    const decodedOrError = JWT.decodeToken(jwtOrError.value.value);
+    const decodedOrError = JWT.decodeToken(jwtOrError.value);
     const decoded = decodedOrError.value as IJWTTokenPayload;
 
     expect(decodedOrError.isRight()).toBe(true);
