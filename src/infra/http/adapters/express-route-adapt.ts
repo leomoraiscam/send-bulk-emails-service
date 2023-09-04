@@ -1,8 +1,6 @@
 import { Request, Response } from 'express';
 
-import { RegisterUserController } from '@modules/accounts/useCases/RegisterUser/RegisterUserController';
-
-export const adaptRoute = (controller: RegisterUserController) => {
+export const adaptRoute = (controller: any) => {
   return async (request: Request, response: Response) => {
     const { name, email, password } = request.body;
 

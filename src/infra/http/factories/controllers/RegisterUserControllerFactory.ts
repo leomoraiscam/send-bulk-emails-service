@@ -6,7 +6,8 @@ import { RegisterUserController } from '@modules/accounts/useCases/RegisterUser/
 
 export const makeRegisterUserController = (): RegisterUserController => {
   const inMemoryHashProvider = new InMemoryHashProvider();
-  const inMemoryUsersRepository = new InMemoryUsersRepository();
+  // const inMemoryUsersRepository = new InMemoryUsersRepository();
+  const inMemoryUsersRepository = InMemoryUsersRepository.getInstance();
 
   const registerUser = new RegisterUser(
     inMemoryUsersRepository,
