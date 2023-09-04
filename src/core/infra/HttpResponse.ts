@@ -3,6 +3,13 @@ export type HttpResponse = {
   body: any;
 };
 
+export function ok<T>(dto?: T): HttpResponse {
+  return {
+    status: 200,
+    body: dto,
+  };
+}
+
 export function created(): HttpResponse {
   return {
     status: 201,
@@ -29,8 +36,6 @@ export function conflict(error: Error): HttpResponse {
 }
 
 export function fail(error: Error): HttpResponse {
-  console.log(error);
-
   return {
     status: 500,
     body: {
