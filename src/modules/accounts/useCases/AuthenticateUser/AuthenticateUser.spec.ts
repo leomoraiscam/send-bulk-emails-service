@@ -19,11 +19,17 @@ describe('Authenticate User Use Case', () => {
   });
 
   it('should be able to authenticate', async () => {
-    const user = User.create({
-      name: Name.create('John Doe') as Name,
-      email: Email.create('john@doe.com') as Email,
-      password: Password.create('123456', true) as Password,
-    }) as User;
+    const nameOrError = Name.create('John Doe').value as Name;
+    const emailOrError = Email.create('john@doe.com').value as Email;
+    const passwordOrError = Password.create('123456', true).value as Password;
+
+    const userOrError = User.create({
+      name: nameOrError,
+      email: emailOrError,
+      password: passwordOrError,
+    });
+
+    const user = userOrError.value as User;
 
     inMemoryUsersRepository.create(user);
 
@@ -32,7 +38,7 @@ describe('Authenticate User Use Case', () => {
       password: '123456',
     });
 
-    expect(response).toEqual(
+    expect(response.value).toEqual(
       expect.objectContaining({ token: expect.any(String) })
     );
   });
@@ -43,15 +49,21 @@ describe('Authenticate User Use Case', () => {
       password: '123456',
     });
 
-    expect(response).toBeInstanceOf(Error);
+    expect(response.isLeft()).toBeTruthy();
   });
 
   it('should not be able to authenticate with wrong user password', async () => {
-    const user = User.create({
-      name: Name.create('John Doe') as Name,
-      email: Email.create('john@doe.com') as Email,
-      password: Password.create('123456') as Password,
-    }) as User;
+    const nameOrError = Name.create('John Doe').value as Name;
+    const emailOrError = Email.create('john@doe.com').value as Email;
+    const passwordOrError = Password.create('123456', true).value as Password;
+
+    const userOrError = User.create({
+      name: nameOrError,
+      email: emailOrError,
+      password: passwordOrError,
+    });
+
+    const user = userOrError.value as User;
 
     await inMemoryUsersRepository.create(user);
 
@@ -60,6 +72,6 @@ describe('Authenticate User Use Case', () => {
       password: 'invalid-password',
     });
 
-    expect(response).toBeInstanceOf(Error);
+    expect(response.isLeft).toBeTruthy();
   });
 });
