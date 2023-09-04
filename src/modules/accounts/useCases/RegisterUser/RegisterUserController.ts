@@ -1,50 +1,47 @@
+import {
+  clientError,
+  conflict,
+  created,
+  fail,
+  HttpResponse,
+} from '@core/infra/HttpResponse';
+
 import { IRegisterUserPayload } from './dtos/IRegisterUserPayload';
+import { AccountAlreadyExistsError } from './errors/AccountAlreadyExistsError';
 import { MissingParamError } from './errors/MissingParamError';
 import { RegisterUser } from './RegisterUser';
 
 export class RegisterUserController {
   constructor(private registerUser: RegisterUser) {}
 
-  async handle(request: IRegisterUserPayload) {
+  async handle(request: IRegisterUserPayload): Promise<HttpResponse> {
     const response = await this.registerUser.execute(request);
 
     try {
-      if (!request.name || !request.email) {
+      const { name, email } = request;
+
+      if (!name || !email) {
         let missing = !request.name ? 'name ' : '';
 
         missing += !request.email ? 'email' : '';
 
-        return {
-          status: 400,
-          body: {
-            data: new MissingParamError(missing.trim()),
-          },
-        };
+        return clientError(new MissingParamError(missing.trim()));
       }
 
-      if (response instanceof Error) {
-        return {
-          status: 400,
-          body: {
-            data: response.name,
-          },
-        };
-      }
+      if (response.isLeft()) {
+        const error = response.value;
 
-      return {
-        status: 201,
-        body: {
-          name: request.name,
-          email: request.email,
-        },
-      };
+        switch (error.name) {
+          case AccountAlreadyExistsError.name:
+            return conflict(error);
+          default:
+            return clientError(error);
+        }
+      } else {
+        return created();
+      }
     } catch (err) {
-      return {
-        status: 500,
-        body: {
-          data: err,
-        },
-      };
+      return fail(err);
     }
   }
 }
